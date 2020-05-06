@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import OverFlowView from './OverFlowView';
 
+const ScreenH = Dimensions.get('window').height;
 export default class DView extends React.Component {
 
   state = {
@@ -20,9 +21,9 @@ export default class DView extends React.Component {
     return (
       <View>
         {this.state.dataArray.map((str, index) => (
-        <Draggable destination={{
+        <Draggable key={`${str}`} destination={{
           x: 0,
-          y: 896-40,
+          y: ScreenH-40,
         }} onArriveDestination={() => this.handleArriveDestination(str)} onBeginMove={() => this.handleBeginMove(index)} >
           {this.renderItem(str)}
         </Draggable>

@@ -7,7 +7,9 @@ import {
     Image,
     PanResponder,
     Animated,
+    Dimensions
 } from 'react-native';
+
 
 export default class Draggable extends Component {
 
@@ -17,9 +19,7 @@ export default class Draggable extends Component {
         this.state = {
             pan: new Animated.ValueXY(),
         };
-    }
 
-    componentWillMount() {
         this._panResponder = PanResponder.create({
             onMoveShouldSetResponderCapture: () => true,
             onMoveShouldSetPanResponderCapture: () => true,
@@ -48,7 +48,10 @@ export default class Draggable extends Component {
                 }
                 Animated.timing(
                     this.state.pan,
-                    {toValue: {x: 0, y: 0}, duration: 300}
+                    {
+                        toValue: {x: 0, y: 0}, 
+                        duration: 300,
+                    }
                 ).start();
             }
         });
@@ -65,11 +68,12 @@ export default class Draggable extends Component {
         // 设置transform为偏移量
         const imageStyle = {transform: [{translateX}, {translateY}]};
 
+        const panHandlers = this._panResponder ? this._panResponder.panHandlers : {};
 
         return (
-            <Animated.View style={[this.props.style, imageStyle]} {...this._panResponder.panHandlers}>
+            <Animated.View style={[this.props.style, imageStyle]} {...panHandlers}>
                {this.props.children}
             </Animated.View>
         )
     }
-}
+} 
