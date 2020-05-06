@@ -18,17 +18,16 @@ export default class DView extends React.Component {
 
   render() {
     return (
-      this.state.dataArray.map((str, index) => (
-        <View key={`${index}`} style={{ position: 'relative', zIndex: 1000000}}>
-          {this.renderItem(str, index)}
-          <Draggable destination={{
-            x: 0,
-            y: 896-40,
-          }} onArriveDestination={() => this.handleArriveDestination(str)} onBeginMove={() => this.handleBeginMove(index)} style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0 }}>
-            {this.renderItem(str)}
-          </Draggable>
-        </View>
-      ))
+      <View>
+        {this.state.dataArray.map((str, index) => (
+        <Draggable destination={{
+          x: 0,
+          y: 896-40,
+        }} onArriveDestination={() => this.handleArriveDestination(str)} onBeginMove={() => this.handleBeginMove(index)} >
+          {this.renderItem(str)}
+        </Draggable>
+      ))}
+      </View>
     )
   }
 
@@ -53,11 +52,6 @@ export default class DView extends React.Component {
   }
 
   renderItem = (str, index = -1) => {
-    if (index === this.state.move) {
-      return (
-        <View style={STYLE.item}/>
-      )
-    }
     return (
       <TouchableOpacity style={[STYLE.item, { backgroundColor: 'red' }]}>
         <Text>{str}</Text>
