@@ -35,9 +35,13 @@ export default class Draggable extends Component {
             },
 
             // 使用拖拽的偏移量来定位
-            onPanResponderMove: Animated.event([
-                null, {dx: this.state.pan.x, dy: this.state.pan.y},
-            ]),
+            onPanResponderMove: (e, gestureState) => {
+                let x = gestureState.moveX - gestureState.x0
+                let y = gestureState.moveY - gestureState.y0
+                this.state.pan.setValue({ x, y });
+                this.props.handleOnMove(e, gestureState);
+
+            },
 
             onPanResponderRelease: (evt, {vx, vy}) => {
                 const { pageX, pageY } = evt.nativeEvent;

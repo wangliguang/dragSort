@@ -12,6 +12,8 @@ import OverFlowView from './OverFlowView';
 const ScreenH = Dimensions.get('window').height;
 export default class DView extends React.Component {
 
+  refDrag = new Map();
+
   state = {
     move: -1,
     dataArray: [1,2,3]
@@ -19,17 +21,21 @@ export default class DView extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
         {this.state.dataArray.map((str, index) => (
-        <Draggable key={`${str}`} destination={{
+        <Draggable ref={ref => this.refDrag.set(index, ref)} key={`${str}`} destination={{
           x: 0,
           y: ScreenH-40,
-        }} onArriveDestination={() => this.handleArriveDestination(str)} onBeginMove={() => this.handleBeginMove(index)} >
+        }} onArriveDestination={() => this.handleArriveDestination(str)} onBeginMove={() => this.handleBeginMove(index)} onMove={this.handleOnMove}>
           {this.renderItem(str)}
         </Draggable>
       ))}
       </View>
     )
+  }
+
+  handleOnMove = () => {
+
   }
 
   handleArriveDestination = (str) => {
@@ -46,7 +52,9 @@ export default class DView extends React.Component {
     }, 0);
   }
 
+  // https://github.com/mochixuan/react-native-drag-sort/blob/2e3546235aec28fbd70518fc509f182205344c7a/Example/app/widget/DragSortableView.js#L10
   handleBeginMove = (move) => {
+    this.touchCurItem = this.refDrag.get(move)
     this.setState({
       move,
     });
