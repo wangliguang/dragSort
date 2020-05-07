@@ -10,6 +10,8 @@ import {
     Dimensions
 } from 'react-native';
 
+const DEFAULT_INDEX = 9;
+
 
 export default class Draggable extends Component {
 
@@ -18,6 +20,7 @@ export default class Draggable extends Component {
 
         this.state = {
             pan: new Animated.ValueXY(),
+            zIndex: 0,
         };
 
         this._panResponder = PanResponder.create({
@@ -38,8 +41,8 @@ export default class Draggable extends Component {
             onPanResponderMove: (e, gestureState) => {
                 let x = gestureState.moveX - gestureState.x0
                 let y = gestureState.moveY - gestureState.y0
-                this.state.pan.setValue({ x, y });
-                this.props.handleOnMove(e, gestureState);
+                // this.state.pan.setValue({ x, y });
+                this.props.onMove && this.props.onMove(e, gestureState);
 
             },
 
@@ -50,13 +53,18 @@ export default class Draggable extends Component {
                     this.props.onArriveDestination();
                     return;
                 }
-                Animated.timing(
-                    this.state.pan,
-                    {
-                        toValue: {x: 0, y: 0}, 
-                        duration: 300,
-                    }
-                ).start();
+                this.setState({
+                    zIndex: DEFAULT_INDEX,
+                });
+                this.props.onMoveEnd && this.props.onMoveEnd()
+
+                // Animated.timing(
+                //     this.state.pan,
+                //     {
+                //         toValue: {x: 0, y: 0}, 
+                //         duration: 300,
+                //     }
+                // ).start();
             }
         });
     }
@@ -64,7 +72,7 @@ export default class Draggable extends Component {
     render(){
 
         // 从state中取出pan
-        const { pan } = this.state;
+        const { pan } = this.props;
 
         // 从pan里计算出偏移量
         const [translateX, translateY] = [pan.x, pan.y];
@@ -75,7 +83,11 @@ export default class Draggable extends Component {
         const panHandlers = this._panResponder ? this._panResponder.panHandlers : {};
 
         return (
-            <Animated.View style={[this.props.style, imageStyle]} {...panHandlers}>
+            <Animated.View style={[{ zIndex: this.state.zIndex }, this.props.style, { 
+                position: 'absolute',
+                top: pan.y,
+                left: pan.x,
+            }]} {...panHandlers}>
                {this.props.children}
             </Animated.View>
         )
