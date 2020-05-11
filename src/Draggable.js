@@ -42,10 +42,15 @@ export default class Draggable extends Component {
 
         const { pageX, pageY } = evt.nativeEvent;
         const { x, y } = this.props.destination;
-        if (pageX > x && pageY > y) {
-            this.props.onArriveDestination && this.props.onArriveDestination();
-        }
-        this.props.onMoveEnd && this.props.onMoveEnd()
+        setTimeout(() => {// 让setState同步起来
+          this.props.onMoveEnd && this.props.onMoveEnd();
+          if (pageX > x && pageY > y) {
+              this.props.onArriveDestination && this.props.onArriveDestination();
+              return;
+          }
+        }, 0);
+        
+       
       }
     });
   }

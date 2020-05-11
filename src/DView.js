@@ -176,17 +176,14 @@ export default class DView extends React.Component {
   }
 
   handleArriveDestination = (str) => {
-    setTimeout(() => {
-      let dataArray = this.state.dataArray;
-      dataArray = dataArray.filter((i) => {
-      return str != i;
-      });
-      this.setState({ dataArray: []});
-      this.setState({
-        dataArray,
-        move: -1,
-      });
-    }, 0);
+    let dataArray = this.state.dataArray;
+    dataArray = dataArray.filter((i) => {
+      return str != i.data;
+    });
+    this.setState({
+      dataArray: [...dataArray],
+      move: -1,
+    });
   }
 
   handleMoveStart = (move) => {
