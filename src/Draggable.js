@@ -19,7 +19,7 @@ export default class Draggable extends Component {
         super(props);
 
         this.state = {
-            pan: new Animated.ValueXY(),
+            pan: this.props.pan,
             zIndex: 0,
         };
 
@@ -29,33 +29,28 @@ export default class Draggable extends Component {
 
             // 设置初始位置
             onPanResponderGrant: (e, gestureState) => {
-                this.state.pan.setOffset({
-                    x: this.state.pan.x._value,
-                    y: this.state.pan.y._value
-                });
+                // this.state.pan.setOffset({
+                //     x: this.state.pan.._value,
+                //     y: this.state.pan.y._value
+                // });
                 this.props.onBeginMove();
-                this.state.pan.setValue({x: 0, y: 0});
             },
 
             // 使用拖拽的偏移量来定位
             onPanResponderMove: (e, gestureState) => {
-                let x = gestureState.moveX - gestureState.x0
-                let y = gestureState.moveY - gestureState.y0
-                // this.state.pan.setValue({ x, y });
                 this.props.onMove && this.props.onMove(e, gestureState);
-
             },
 
             onPanResponderRelease: (evt, {vx, vy}) => {
-                const { pageX, pageY } = evt.nativeEvent;
-                const { x, y } = this.props.destination;
-                if (pageX > x && pageY > y) {
-                    this.props.onArriveDestination();
-                    return;
-                }
-                this.setState({
-                    zIndex: DEFAULT_INDEX,
-                });
+                // const { pageX, pageY } = evt.nativeEvent;
+                // const { x, y } = this.props.destination;
+                // if (pageX > x && pageY > y) {
+                //     this.props.onArriveDestination();
+                //     return;
+                // }
+                // this.setState({
+                //     zIndex: DEFAULT_INDEX,
+                // });
                 this.props.onMoveEnd && this.props.onMoveEnd()
 
                 // Animated.timing(
@@ -83,11 +78,7 @@ export default class Draggable extends Component {
         const panHandlers = this._panResponder ? this._panResponder.panHandlers : {};
 
         return (
-            <Animated.View style={[{ zIndex: this.state.zIndex }, this.props.style, { 
-                position: 'absolute',
-                top: pan.y,
-                left: pan.x,
-            }]} {...panHandlers}>
+            <Animated.View style={[{ zIndex: this.state.zIndex }, this.props.style, imageStyle]} {...panHandlers}>
                {this.props.children}
             </Animated.View>
         )

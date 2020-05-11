@@ -14,14 +14,17 @@ import OverFlowView from './OverFlowView';
 const ScreenH = Dimensions.get('window').height;
 const ScreenW = Dimensions.get('window').width;
 
-const ROWNUM = 2;
-const ITEM_WIDTH = 65;
-const ITEM_HEIGHT = 65;
+const COLUMN_NUM = 3;
+const ITEM_WIDTH = 105;
+const ITEM_HEIGHT = 105;
 
 const TOUCH_ZINDEX = 99;
 const DEFAULT_INDEX = 9;
 
-// 设置初始动画
+/* 思路：使用动画transform，不想使用定位
+ * 1. 初始时算出每个项目的位置，并赋值给originX与originY，将对应的transfrom动画的x/y都置为0，将初始下标赋值给originIndex
+ * 2. 
+ */
 // 移动时给每个组件都找到新位置，然后执行动画
 // 移动结束，将移动到的位置设置为新的其实位置
 
@@ -29,84 +32,83 @@ export default class DView extends React.Component {
 
   refDrag = new Map();
 
+  touchCurItem = {
+    ref: null,
+    index: 0,
+    moveToIndex: 0,
+    translateX: 0,
+    translateY: 0,
+  }
+
   constructor(props) {
     super(props);
 
-    
       const dataArray = props.dataArray.map((item, index)=>{
-      const newData = {}
-      const left = (index % ROWNUM) * ITEM_WIDTH;
-      const top = parseInt((index/ROWNUM)) * ITEM_HEIGHT;
+        const newData = {}
+        const translateX = (index % COLUMN_NUM) * ITEM_WIDTH;
+        const translateY = parseInt((index/COLUMN_NUM)) * ITEM_HEIGHT;
 
-      // console.log(left, top);
-
-      newData.data = item;
-      newData.originIndex = index;
-      newData.originLeft = left;
-      newData.originTop = top;
-      newData.position = new Animated.ValueXY({
-          x: parseInt(left+0.5),
-          y: parseInt(top+0.5),
-      });
-      return newData
+        newData.data = item;
+        newData.originIndex = index;
+        newData.originX = translateX;
+        newData.originY = translateY;
+        newData.transAnimated = new Animated.ValueXY({
+          x: parseInt(0+0.5),
+          y: parseInt(0+0.5),
+        });
+        return newData
     });
     this.state = {
       dataArray,
       move: -1,
-      height: Math.ceil(dataArray.length / ROWNUM) * ITEM_HEIGHT,
     };
-  }
-
-  componentDidMount() {
   }
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', height: this.state.height, width: ScreenW, position: 'relative' }}>
-        
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: ScreenW }}>
         {this.state.dataArray.map((item, index) => (
-        <Draggable onMoveEnd={this.handleMoveEnd} pan={this.state.dataArray[index].position} ref={ref => this.refDrag.set(index, ref)} key={`${item.data}`} destination={{
-          x: 0,
-          y: ScreenH-40,
-        }} onArriveDestination={() => this.handleArriveDestination(item.data)} onBeginMove={() => this.handleBeginMove(index)} onMove={this.handleOnMove}>
-          {this.renderItem(item.data)}
-        </Draggable>
+          <Draggable 
+            ref={ref => this.refDrag.set(index, ref)} 
+            pan={this.state.dataArray[index].transAnimated} 
+            key={`${item.data}`} 
+            destination={{
+              x: 0,
+              y: ScreenH-40,
+            }} 
+            onMoveEnd={this.handleMoveEnd} 
+            onBeginMove={() => this.handleBeginMove(index)} 
+            onMove={this.handleOnMove}
+            onArriveDestination={() => this.handleArriveDestination(item.data)} 
+          >
+            {this.renderItem(item.data)}
+          </Draggable>
       ))}
       </View>
     )
   }
 
+
   handleOnMove = (e, gestureState) => {
-    this.isHasMove = true;
     if (!this.touchCurItem) return;
     
-    let dx = gestureState.dx
-    let dy = gestureState.dy
-    const itemWidth = ITEM_WIDTH;
-    const itemHeight = ITEM_HEIGHT;
-
-    const rowNum = ROWNUM;
-    const maxWidth = ITEM_WIDTH;
-    const maxHeight = ITEM_HEIGHT;
-
-    let left = this.touchCurItem.originLeft + dx;
-    let top = this.touchCurItem.originTop + dy;
+    // 偏移量
+    let translateX = gestureState.dx;
+    let translateY = gestureState.dy;
 
     this.touchCurItem.ref.setState({
       zIndex: TOUCH_ZINDEX,
     })
 
-    this.state.dataArray[this.touchCurItem.index].position.setValue({
-      x: left,
-      y: top,
-    })
-    // return;
+    const curItem = this.state.dataArray[this.touchCurItem.index].transAnimated.setOffset({
+      x: translateX,
+      y: translateY
+    });
 
-    console.log(dx, dy);
+    
+    let moveXNum = translateX/ITEM_WIDTH
+    let moveYNum = translateY/ITEM_HEIGHT
 
-    let moveToIndex = 0
-    let moveXNum = dx/ITEM_WIDTH
-    let moveYNum = dy/ITEM_HEIGHT
     if (moveXNum > 0) {
         moveXNum = parseInt(moveXNum+0.5)
     } else if (moveXNum < 0) {
@@ -117,9 +119,8 @@ export default class DView extends React.Component {
     } else if (moveYNum < 0) {
         moveYNum = parseInt(moveYNum-0.5)
     }
-    
 
-    moveToIndex = this.touchCurItem.index+moveXNum+moveYNum*ROWNUM
+    let moveToIndex = this.touchCurItem.index + moveXNum + moveYNum * COLUMN_NUM;
 
     if (moveToIndex > this.state.dataArray.length-1) {
         moveToIndex = this.state.dataArray.length-1
@@ -139,22 +140,22 @@ export default class DView extends React.Component {
               nextItem = this.state.dataArray[index+1]
 
           } else if (index != this.touchCurItem.index &&
-              (item.position.x._value != item.originLeft ||
-                  item.position.y._value != item.originTop)) {
+              (item.transAnimated.x._value != item.originX ||
+                  item.transAnimated.y._value != item.originY)) {
               nextItem = this.state.dataArray[index]
 
           } else if ((this.touchCurItem.index-moveToIndex > 0 && moveToIndex == index+1) ||
               (this.touchCurItem.index-moveToIndex < 0 && moveToIndex == index-1)) {
               nextItem = this.state.dataArray[index]
           }
-         
+          
           if (nextItem != null) {
               Animated.timing(
-                  item.position,
+                  item.transAnimated,
                   {
-                      toValue: {x: parseInt(nextItem.originLeft+0.5),y: parseInt(nextItem.originTop+0.5)},
+                      toValue: {x: parseInt(nextItem.originX+0.5 - item.originX),y: parseInt(nextItem.originY+0.5 - item.originY)},
                       duration: 300,
-                      // easing: Easing.out(Easing.quad),
+                      easing: Easing.out(Easing.quad),
                       useNativeDriver: false,
                   }
               ).start()
@@ -184,31 +185,42 @@ export default class DView extends React.Component {
     this.touchCurItem = {
       ref: this.refDrag.get(move),
       index: move,
-      originLeft: this.state.dataArray[move].originLeft,
-      originTop: this.state.dataArray[move].originTop,
-      moveToIndex: move,
-    } 
+      moveToIndex: 0,
+      translateX: 0,
+      translateY: 0,
+    }
     this.setState({
       move,
     });
   }
 
   handleMoveEnd = () => {
+    this.state.dataArray.forEach((item, index) => {
+      // https://future-challenger.gitbooks.io/react-native-animation/flattenoffset.html
+      item.transAnimated.flattenOffset();
+    })
+
     const curIndex = this.touchCurItem.index;
     const moveToIndex = this.touchCurItem.moveToIndex;
-    // console.log(curIndex, moveToIndex);
-    if (curIndex == moveToIndex) {
-      const curItem = this.state.dataArray[this.touchCurItem.index];
-      Animated.timing(
-        curItem.position,
-        {
-            toValue: {x: parseInt(curItem.originLeft+0.5),y: parseInt(curItem.originTop+0.5)},
-            duration: 300,
-            // easing: Easing.out(Easing.quad),
-            useNativeDriver: false,
-        }
-      ).start()
+    const curItem = this.state.dataArray[this.touchCurItem.index];
+    const moveToItem = this.state.dataArray[moveToIndex];
+
+    let translateX = 0;
+    let translateY = 0;
+
+    if (curIndex != moveToIndex) {
+      translateX = parseInt(moveToItem.originX - curItem.originX+0.5);
+      translateY = parseInt(moveToItem.originY - curItem.originY+0.5); 
     }
+    Animated.timing(
+      curItem.transAnimated,
+      {
+          toValue: {x: translateX,y: translateY},
+          duration: 300,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: false,
+      }
+    ).start()
     this.touchCurItem = null;
   }
 
@@ -223,8 +235,8 @@ export default class DView extends React.Component {
 
 const STYLE = StyleSheet.create({
   item: {
-    width: 50, 
-    height: 50,
+    width: 90, 
+    height: 90,
     marginRight: 15, 
     marginTop: 15,
   }
