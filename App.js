@@ -31,7 +31,12 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions}>
           To get started, edit App.js
         </Text>
-        <DView dataArray={[1,2,3,4,5,6]}/>
+        <DView 
+          dataArray={[1,2,3,4,5,6,7,8,9,10,33]}
+          itemW={90}
+          itemH={90}
+          itemMargin={15}
+        />
         <Text style={styles.instructions}>
           {instructions}
         </Text>
