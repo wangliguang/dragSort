@@ -12,8 +12,7 @@ import {
   View
 } from 'react-native';
 
-import DView from './src/DView';
-import DeleteFooter from './src/DeleteFooter';
+import DragSort, { DeleteFooter } from './src';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -32,7 +31,7 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions}>
           To get started, edit App.js
         </Text>
-        <DView 
+        <DragSort 
           dataArray={[1,2,3,4,5,6,7,8,9,10,33]}
           style={{ zIndex: 1000}}
           itemW={90}

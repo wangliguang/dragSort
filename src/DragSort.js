@@ -1,4 +1,4 @@
-import Draggable from './Draggable';
+import Draggable from './DragItem';
 import React from 'react';
 import {
   View,
@@ -9,14 +9,11 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import OverFlowView from './OverFlowView';
 
 const ScreenH = Dimensions.get('window').height;
 const ScreenW = Dimensions.get('window').width;
 
 const COLUMN_NUM = 3;
-const ITEM_WIDTH = 105;
-const ITEM_HEIGHT = 105;
 
 /* 思路：使用动画transform，不想使用定位
  * 1. 初始时,将数据源转化为如下格式
@@ -46,7 +43,7 @@ const ITEM_HEIGHT = 105;
  *  1）3-1)中性能上应该使用setNativeProps，但实验RN版本中改方法已经取消
  */
 
-export default class DView extends React.Component {
+export default class extends React.Component {
 
   refDrag = new Map();
 

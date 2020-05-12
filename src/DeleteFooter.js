@@ -6,8 +6,6 @@ import {
   Text,
   DeviceEventEmitter
 } from 'react-native';
-
-const ScreenH = Dimensions.get('window').height;
 const ScreenW = Dimensions.get('window').width;
 
 export const DRAG_EVENT = {
@@ -34,7 +32,10 @@ export default class extends React.PureComponent {
     DeviceEventEmitter.addListener(DRAG_EVENT.delete, () => {
       this.setState({ text: '' });
     });
+  }
 
+  componentWillUnmount() {
+    DeviceEventEmitter.removeAllListeners();
   }
 
   render() {

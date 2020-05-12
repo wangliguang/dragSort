@@ -1,7 +1,4 @@
-import React, {
-    Component,
-} from 'react';
-
+import React from 'react';
 import {
     StyleSheet,
     Image,
@@ -12,11 +9,11 @@ import {
 } from 'react-native';
 import { DRAG_EVENT } from './DeleteFooter'
 
+
 const TOUCH_ZINDEX = 99;
 const DEFAULT_INDEX = 9;
 
-
-export default class Draggable extends Component {
+export default class DragItem extends React.Component {
 
   constructor(props){
     super(props);
@@ -60,8 +57,6 @@ export default class Draggable extends Component {
               this.props.onArriveDestination && this.props.onArriveDestination();
           }
         }, 0);
-        
-       
       }
     });
   }
