@@ -41,15 +41,14 @@ export default class extends React.Component {
         newData.originX = translateX;
         newData.originY = translateY;
         newData.transAnimated = new Animated.ValueXY({
-          x: parseInt(0+0.5),
-          y: parseInt(0+0.5),
+          x: 0,
+          y: 0,
         });
         return newData
-    });
-    this.state = {
-      dataArray,
-      move: -1,
-    };
+      });
+      this.state = {
+        dataArray,
+      };
   }
 
   render() {
@@ -156,7 +155,6 @@ export default class extends React.Component {
     });
     this.setState({
       dataArray: [...dataArray],
-      move: -1,
     });
   }
 
@@ -166,9 +164,6 @@ export default class extends React.Component {
       index: move,
       moveToIndex: 0,
     }
-    this.setState({
-      move,
-    });
   }
 
   handleMoveEnd = () => {
