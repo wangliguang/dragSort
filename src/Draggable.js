@@ -7,8 +7,10 @@ import {
     Image,
     PanResponder,
     Animated,
-    Dimensions
+    Dimensions,
+    DeviceEventEmitter
 } from 'react-native';
+import { DRAG_EVENT } from './DeleteFooter'
 
 const TOUCH_ZINDEX = 99;
 const DEFAULT_INDEX = 9;
@@ -35,6 +37,15 @@ export default class Draggable extends Component {
       onPanResponderMove: (e, gestureState) => {
           this.setState({ zIndex: TOUCH_ZINDEX }); // 为什么不能放到手势开始时呢
           this.props.onMove && this.props.onMove(e, gestureState);
+
+          const { pageX, pageY } = e.nativeEvent;
+          const { x, y } = this.props.destination;
+          if (pageX > x && pageY > y) {
+            DeviceEventEmitter.emit(DRAG_EVENT.isDelete)
+          } else {
+            DeviceEventEmitter.emit(DRAG_EVENT.beginDrag)
+          }
+
       },
 
       onPanResponderRelease: (evt, {vx, vy}) => {
@@ -45,8 +56,8 @@ export default class Draggable extends Component {
         setTimeout(() => {// 让setState同步起来
           this.props.onMoveEnd && this.props.onMoveEnd();
           if (pageX > x && pageY > y) {
+            DeviceEventEmitter.emit(DRAG_EVENT.delete)
               this.props.onArriveDestination && this.props.onArriveDestination();
-              return;
           }
         }, 0);
         

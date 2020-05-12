@@ -24,6 +24,10 @@ const ITEM_HEIGHT = 105;
       2) 算出每项位置(originX/originY)，
       3) 每项transfrom动画的x/y都置为0 
       4) 初始下标originIndex
+ * 2. 渲染时，新数据源属性做如下分配
+      1) 收集每个item的ref引用
+      2）将transAnimated赋值给拖拽组件
+      3）将新构造的数据源中originIndex给到onMove事件，不要使用map中的index,因为每次排序该值都不会变
  * 2. 开始拖拽，将如下属性赋值给this.touchCurItem
       1) 拖拽item引用(ref)
       2）拖拽item的下标(index)
@@ -39,7 +43,7 @@ const ITEM_HEIGHT = 105;
       4) 将touchCurItem置null
  * 
  * 注意点：
- *  1）3-1)中性能上应该使用setNativeProps，但实验版本中改方法已经取消
+ *  1）3-1)中性能上应该使用setNativeProps，但实验RN版本中改方法已经取消
  */
 
 export default class DView extends React.Component {
@@ -81,7 +85,7 @@ export default class DView extends React.Component {
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: 315 }}>
+      <View style={[{ flexDirection: 'row', flexWrap: 'wrap', width: 315 }, this.props.style]}>
         {this.state.dataArray.map((item, index) => (
           <Draggable 
             ref={ref => this.refDrag.set(index, ref)} 
@@ -176,6 +180,7 @@ export default class DView extends React.Component {
   }
 
   handleArriveDestination = (str) => {
+    
     let dataArray = this.state.dataArray;
     dataArray = dataArray.filter((i) => {
       return str != i.data;
