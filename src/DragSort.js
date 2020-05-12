@@ -110,41 +110,34 @@ export default class extends React.Component {
         moveToIndex = 0;
     }
 
-    if (this.touchCurItem.moveToIndex != moveToIndex ) {
-      this.touchCurItem.moveToIndex = moveToIndex
-      this.state.dataArray.forEach((item,index)=>{
-          let nextItem = null
+    if (this.touchCurItem.moveToIndex == moveToIndex ) return;
 
-          if (index > this.touchCurItem.index && index <= moveToIndex) { // 向右拖拽
-              nextItem = this.state.dataArray[index-1]
-          } else if (index >= moveToIndex && index < this.touchCurItem.index) { // 向左拖拽
-              nextItem = this.state.dataArray[index+1]
-          } else if (index != this.touchCurItem.index &&
-            (item.transAnimated.x._value != item.originX ||
-                item.transAnimated.y._value != item.originY)) { // 处理不松开时左右滑动
-            nextItem = this.state.dataArray[index]
-          } 
+    this.touchCurItem.moveToIndex = moveToIndex
+    this.state.dataArray.forEach((item,index)=>{
+      let nextItem = null
 
-          // 暂时不知有啥用
-          // else if ((this.touchCurItem.index > moveToIndex && moveToIndex == index+1) ||
-          //     (this.touchCurItem.index < moveToIndex && moveToIndex == index-1)) {
-          //     nextItem = this.state.dataArray[index]
-          // }
-          
-          if (nextItem != null) {
-              Animated.timing(
-                  item.transAnimated,
-                  {
-                      toValue: {x: parseInt(nextItem.originX+0.5 - item.originX),y: parseInt(nextItem.originY+0.5 - item.originY)},
-                      duration: 300,
-                      easing: Easing.out(Easing.quad),
-                      useNativeDriver: false,
-                  }
-              ).start()
-          }
-      })
-  }
-
+      if (index > this.touchCurItem.index && index <= moveToIndex) { // 向右拖拽
+            nextItem = this.state.dataArray[index-1]
+      } else if (index >= moveToIndex && index < this.touchCurItem.index) { // 向左拖拽
+            nextItem = this.state.dataArray[index+1]
+      } else if (index != this.touchCurItem.index &&
+          (item.transAnimated.x._value != item.originX ||
+              item.transAnimated.y._value != item.originY)) { // 处理不松开时左右滑动
+          nextItem = this.state.dataArray[index]
+      } 
+        
+      if (nextItem != null) {
+          Animated.timing(
+              item.transAnimated,
+              {
+                  toValue: {x: parseInt(nextItem.originX+0.5 - item.originX),y: parseInt(nextItem.originY+0.5 - item.originY)},
+                  duration: 300,
+                  easing: Easing.out(Easing.quad),
+                  useNativeDriver: false,
+              }
+          ).start()
+      }
+    })
   }
 
   handleArriveDestination = (str) => {
@@ -167,9 +160,9 @@ export default class extends React.Component {
   }
 
   handleMoveEnd = () => {
-    this.state.dataArray.forEach((item, index) => {
-      item.transAnimated.flattenOffset();
-    })
+    // this.state.dataArray.forEach((item, index) => {
+    //   item.transAnimated.flattenOffset();
+    // })
 
     const curIndex = this.touchCurItem.index;
     const moveToIndex = this.touchCurItem.moveToIndex;
