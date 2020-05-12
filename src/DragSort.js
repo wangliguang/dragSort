@@ -53,7 +53,7 @@ export default class extends React.Component {
 
   render() {
     return (
-      <View style={[{ flexDirection: 'row', flexWrap: 'wrap', width: 315 }, this.props.style]}>
+      <View style={[{ flexDirection: 'row', flexWrap: 'wrap', width: this.itemW*COLUMN_NUM }, this.props.style]}>
         {this.state.dataArray.map((item, index) => (
           <Draggable 
             ref={ref => this.refDrag.set(index, ref)} 
@@ -240,18 +240,11 @@ export default class extends React.Component {
 
   renderItem = (str, index = -1) => {
     return (
-      <TouchableOpacity style={[STYLE.item, { backgroundColor: 'red' }]}>
+      <TouchableOpacity 
+        style={{ width: this.props.itemW, height: this.props.itemH, marginTop: this.props.itemMargin, marginRight: this.props.itemMargin, backgroundColor: 'red'  }}
+      >
         <Text>{str}</Text>
       </TouchableOpacity>
     )
   }
 }
-
-const STYLE = StyleSheet.create({
-  item: {
-    width: 90, 
-    height: 90,
-    marginRight: 15, 
-    marginTop: 15,
-  }
-})
