@@ -11,7 +11,7 @@ const ScreenW = Dimensions.get('window').width;
 export const DRAG_EVENT = {
   beginDrag: 'beginDrag',
   isDelete: 'isDelete',
-  delete: 'delete',
+  deleteOrNot: 'deleteOrNot',
 }
 
 export default class extends React.PureComponent {
@@ -29,7 +29,7 @@ export default class extends React.PureComponent {
       this.setState({ text: '松手即可删除' });
     });
 
-    DeviceEventEmitter.addListener(DRAG_EVENT.delete, () => {
+    DeviceEventEmitter.addListener(DRAG_EVENT.deleteOrNot, () => {
       this.setState({ text: '' });
     });
   }

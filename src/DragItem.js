@@ -50,11 +50,11 @@ export default class DragItem extends React.Component {
 
         const { pageX, pageY } = evt.nativeEvent;
         const { x, y } = this.props.destination;
+        DeviceEventEmitter.emit(DRAG_EVENT.deleteOrNot)
         setTimeout(() => {// 让setState同步起来
           this.props.onMoveEnd && this.props.onMoveEnd();
           if (pageX > x && pageY > y) {
-            DeviceEventEmitter.emit(DRAG_EVENT.delete)
-              this.props.onArriveDestination && this.props.onArriveDestination();
+            this.props.onArriveDestination && this.props.onArriveDestination();
           }
         }, 0);
       }
