@@ -11,9 +11,11 @@ import {
   Text,
   View
 } from 'react-native';
+import { Screen } from '@dal/react-native-functions';
+const px = Screen.px;
 
 import DragSort, { DeleteFooter } from './src';
-
+import Shadow from './shadow'
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
     'Cmd+D or shake for dev menu',
@@ -22,26 +24,13 @@ const instructions = Platform.select({
 });
 
 export default class App extends Component<{}> {
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <DragSort 
-          dataArray={[1,2,3,4,5,6,7,8,9,10,33]}
-          style={{ zIndex: 1000}}
-          itemW={90}
-          itemH={90}
-          itemMargin={15}
-        />
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-        <DeleteFooter/>
+       <Shadow>
+          <View style={{ backgroundColor: 'white', width: px(715) - px(18), height: px(500) }}/>
+        </Shadow>
       </View>
     );
   }
@@ -52,7 +41,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
   },
   welcome: {
     fontSize: 20,

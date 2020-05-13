@@ -721,6 +721,13 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@dal/react-native-functions@^1.0.6":
+  version "1.0.6"
+  resolved "http://npm-registry.corp.daling.com/@dal%2freact-native-functions/-/react-native-functions-1.0.6.tgz#99db4f7543d5b1e94561691c20c3e0a2d4d51ce9"
+  integrity sha1-mdtPdUPVselFYWkcIMPgotTVHOk=
+  dependencies:
+    qs "6.7.0"
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "http://npm-registry.corp.daling.com/@hapi%2faddress/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -5447,6 +5454,11 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "http://npm-registry.corp.daling.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
+
+qs@6.7.0:
+  version "6.7.0"
+  resolved "http://npm-registry.corp.daling.com/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
+  integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
 
 qs@~6.5.2:
   version "6.5.2"
