@@ -26,7 +26,7 @@ export default class extends React.Component {
 
   render() {
     return (
-      <View onLayout={this.handleLayout} style={{ position: 'relative' }}>
+      <View onLayout={this.handleLayout} style={[{ position: 'relative' }, this.props.style]}>
         <Image resizeMode={'stretch'} style={[STYLE.top, { width: this.props.width }]} source={require('./img/top.png')}/>
         <Image resizeMode={'stretch'} style={[STYLE.left, { height: this.state.height} ]} source={require('./img/left.png')}/>
         <Image resizeMode={'stretch'} style={[STYLE.right, { height: this.state.height } ]} source={require('./img/right.png')}/>
@@ -42,7 +42,6 @@ export default class extends React.Component {
 const STYLE = StyleSheet.create({
   top: {
     position: 'absolute',
-    width: px(715),
     height: px(8),
     top: 0,
     right: 0,
@@ -50,7 +49,6 @@ const STYLE = StyleSheet.create({
   },
   bottom: {
     position: 'absolute',
-    width: px(715),
     height: px(12),
     bottom: 0,
     right: 0,
