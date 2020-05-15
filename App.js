@@ -29,7 +29,7 @@ export default class App extends Component<{}> {
     return (
       <View style={styles.container}>
        <Shadow>
-          <View style={{ backgroundColor: 'white', width: px(715) - px(18), height: px(500) }}/>
+          <View style={{ backgroundColor: 'white', height: px(200), width: px(200) }}/>
         </Shadow>
       </View>
     );
