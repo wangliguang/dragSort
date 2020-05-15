@@ -32,7 +32,7 @@ export default class extends React.Component {
         <Image resizeMode={'stretch'} style={[STYLE.right, { height: this.state.height } ]} source={require('./img/right.png')}/>
         <Image resizeMode={'stretch'} style={[STYLE.bottom, { width: this.props.width } ]} source={require('./img/bottom.png')}/>
         <View style={[{ marginHorizontal: px(9), marginTop: px(8), marginBottom: px(12) }]}>
-          {this.props.children}
+          {this.props.children} 
         </View>
       </View>
     )

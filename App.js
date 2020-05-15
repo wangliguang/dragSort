@@ -29,7 +29,10 @@ export default class App extends Component<{}> {
     return (
       <View style={styles.container}>
        <Shadow>
-          <View style={{ backgroundColor: 'white', height: px(200), width: px(200) }}/>
+         {/* 该View的宽度是没有无阴影下的宽度 */}
+          <View style={{ backgroundColor: 'white', height: px(200), width: px(200) }}> 
+              {/* 这里布局自己的View */}
+          </View>
         </Shadow>
       </View>
     );
